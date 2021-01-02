@@ -1,0 +1,52 @@
+Q1.
+Find IDs of all students who have got at least one F grade; eliminate duplicates.
+Ans1. 	select distinct ID from takes where grade='F'
+
+
+Q2.
+Find IDs of all students who have never got an F grade, using a subquery.  Eliminate duplicates.
+Ams2. 	select ID from takes where ID not in (select ID from takes where grade = 'F')
+
+
+Q3.
+Find the average and sum of the tot_creds attribute of students, grouped by department.
+Name the result attributes as avgcredit and totalcredit.
+Ans3. 	select avg(tot_cred) as avgcredit, sum(tot_cred) as totalcredit from student group by dept_name
+
+
+Q4.
+Find ID and name of all students who have the maximum value for tot_cred, using a with clause
+Ans4. 	with max_tot_cred as (select max(tot_cred)) select ID, name from student, max_tot_cred where student.tot_cred = max_tot_cred.value	
+
+
+Q5.
+Find ID and name of all students who have the maximum value for tot_cred, using a subquery
+Ans5. 	select ID, name from student where tot_cred = (select max(tot_cred) from student)
+
+
+Q6.
+Find the ID, student name, course_id, and course title for all courses taken by all students
+Ans6. 	select takes.Id, name, takes.course_id, title from student, takes, course where student.Id = takes.Id and takes.course_id = course.course_Id
+
+
+Q7.
+Find ID, and name of all students, along with the total number of courses taken by the student.  If a student has not taken any courses, the number should be displayed as null.  Hint: Use a scalar subquery.
+Ans7.	select student.Id, name, count(course_id) as num_courses from student natural left outer join takes group by student.ID
+
+
+Q8.
+Update the salary of all instructors in the 'Comp. Sci.' department by adding 100 per course that they have taught.
+Ans8. 	update instructor set salary = salary + 100*(select count(teaches.course_id)) from teaches where instructor.ID = teaches.ID) instructor.dept_name='Comp. Sci.'
+
+
+Q9.
+Create a relation reading(time, value) where time is an integer representing the number of seconds since some start time, and value is a real number.
+Ans9. 	create table reading(time int, value real)
+
+
+Q10.
+For the reading relation from the previous question, write a query that finds the average reading value for each 5 minute period.
+The 5 minute period is simply identified by taking floor of the time divided by 300. 
+Since your query on XData won't have access to the reading relation, use a with clause as follows as part of the query:
+with reading(time, val) as (select 100, 4 union select 200, 3 union select 500, 4 union select 550, 3 union select 1500, 2).
+Use exactly this data to simplify automated testing.
